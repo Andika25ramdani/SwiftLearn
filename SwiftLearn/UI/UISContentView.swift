@@ -20,6 +20,9 @@ struct UISContentView: View {
 			user.displayname = "User \(id.uuidString)"
 			user.username = id.uuidString
 			user.phone = "+62\(id.uuidString)"
+			user.avatar = CDMEMedia(context: viewContext)
+			user.avatar?.id = id
+			user.avatar?.onlineURL = URL(string: "https://previews.123rf.com/images/hloya/hloya1711/hloya171100074/90750170-decorative-panel-for-laser-cutting-art-silhouette-design-ratio-1-1-vector-illustration.jpg")
 			self.saveContext()
 		}
 	}
@@ -43,9 +46,21 @@ struct UISContentView: View {
 					self.searchUser.isEmpty ? true : $0.displayname?.lowercased().contains(self.searchUser.lowercased()) ?? false
 				}), content: { user in
 					HStack(content: {
-						Image(systemName: "person").font(.largeTitle)
+						if #available(iOS 15.0, *) {
+							AsyncImage(url: user.avatar?.onlineURL, content: { image in
+								image.image?
+									.resizable()
+									.frame(width: 52, height: 52)
+									.scaledToFill()
+							})
+						}
 						VStack(content: {
 							Text(user.displayname ?? "")
+								.lineLimit(1)
+							Text("\(user.username ?? "") - \(user.phone ?? "")")
+								.font(.caption)
+								.foregroundColor(.secondary)
+								.lineLimit(1)
 						})
 					})
 				}).onDelete(perform: self.deleteUser)
