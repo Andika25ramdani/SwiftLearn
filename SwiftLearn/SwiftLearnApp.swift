@@ -9,12 +9,14 @@ import SwiftUI
 
 @main
 struct SwiftLearnApp: App {
-    let persistenceController = PersistenceController.shared
+    // let persistenceController = PersistenceController.shared
+	let persistence = CDPersistence.shared
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+			UISContentView().environment(\.managedObjectContext, persistence.container.viewContext)
+			// ContentView()
+                // .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
